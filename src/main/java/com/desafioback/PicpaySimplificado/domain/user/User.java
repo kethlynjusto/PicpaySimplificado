@@ -1,5 +1,6 @@
 package com.desafioback.PicpaySimplificado.domain.user;
 
+import com.desafioback.PicpaySimplificado.dtos.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -28,9 +29,20 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private String senha;
+    private String password;
     private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
+
+    public User(UserDTO data){
+        this.firstname = data.firstname();
+        this.lastname = data.lastName();
+        this.document = data.document();
+        this.email = data.email();
+        this.password = data.password();
+        this.balance = data.balance();
+        this.userType = data.userType();
+    }
+
 }
