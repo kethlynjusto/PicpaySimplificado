@@ -5,6 +5,7 @@ import com.desafioback.PicpaySimplificado.domain.user.User;
 import com.desafioback.PicpaySimplificado.dtos.TransactionDTO;
 import com.desafioback.PicpaySimplificado.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,12 @@ public class TransactionService {
     private TransactionRepository repository;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private RestTemplate restTemplate;
 
-    public void createTransaction(TransactionDTO transaction) throws Exception {
+    public Transaction createTransaction(TransactionDTO transaction) throws Exception {
         User sender = this.userService.findUserById(transaction.senderId());
         User receiver = this.userService.findUserById(transaction.receiverId());
 
@@ -50,15 +54,23 @@ public class TransactionService {
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
 
+//        this.notificationService.sendNotification(sender, "Transação realizada com sucesso");
+//        this.notificationService.sendNotification(receiver, "Transação recebida com sucesso");
+
+        return newTransaction;
 
     }
 
     public boolean authorizeTransaction(User sender, BigDecimal value){
         ResponseEntity<Map> authorizationResponse = restTemplate.getForEntity("https://util.devi.tools/api/v2/authorize", Map.class);
 
-        if(authorizationResponse.getStatusCode() == HttpStatus.OK && authorizationResponse.getBody().get("status") == "success"){
+        if (authorizationResponse.getStatusCode() == HttpStatus.OK
+                && "success".equals(authorizationResponse.getBody().get("status"))){
+//                && Boolean.TRUE.equals(authorizationResponse.getBody().get("authorization"))){
+
+//        if((authorizationResponse.getStatusCode() == HttpStatus.OK) && (authorizationResponse.getBody().get("status") == "true")){
             return true;
-        } else return false;
+        } return false;
     }
 
 
