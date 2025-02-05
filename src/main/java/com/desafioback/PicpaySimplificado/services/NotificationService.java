@@ -1,7 +1,6 @@
 package com.desafioback.PicpaySimplificado.services;
 
 import com.desafioback.PicpaySimplificado.domain.user.User;
-import com.desafioback.PicpaySimplificado.dtos.NotificationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

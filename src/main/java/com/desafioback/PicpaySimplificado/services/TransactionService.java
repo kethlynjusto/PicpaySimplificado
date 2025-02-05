@@ -5,11 +5,11 @@ import com.desafioback.PicpaySimplificado.domain.user.User;
 import com.desafioback.PicpaySimplificado.dtos.TransactionDTO;
 import com.desafioback.PicpaySimplificado.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,17 +18,33 @@ import java.util.Map;
 @Service
 public class TransactionService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final TransactionRepository repository;
+    private final NotificationService notificationService;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    private TransactionRepository repository;
+    public TransactionService(UserService userService,
+                              TransactionRepository repository,
+                              NotificationService notificationService,
+                              RestTemplate restTemplate) {
+        this.userService = userService;
+        this.repository = repository;
+        this.notificationService = notificationService;
+        this.restTemplate = restTemplate;
+    }
 
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private RestTemplate restTemplate;
+//    @Autowired
+//    private UserService userService;
+//
+//    @Autowired
+//    private TransactionRepository repository;
+//
+//    @Autowired
+//    private NotificationService notificationService;
+//
+//    @Autowired
+//    private RestTemplate restTemplate;
 
     public Transaction createTransaction(TransactionDTO transaction) throws Exception {
         User sender = this.userService.findUserById(transaction.senderId());
@@ -38,7 +54,7 @@ public class TransactionService {
 
         boolean isAuthorized = this.authorizeTransaction(sender, transaction.value());
         if(!isAuthorized){
-            throw new Exception("Não autorizado");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Não autorizado");
         }
 
         Transaction newTransaction = new Transaction();
@@ -72,6 +88,5 @@ public class TransactionService {
             return true;
         } return false;
     }
-
 
 }
