@@ -1,3 +1,8 @@
+# Authentication API
+
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+
 ## Objetivo: PicPay Simplificado
 
 O PicPay Simplificado é uma plataforma de pagamentos simplificada. Nela é possível depositar e realizar transferências
@@ -30,3 +35,85 @@ A seguir estão algumas regras de negócio que são importantes para o funcionam
   utilizando o verbo `POST`;
 
 - Este serviço deve ser RESTFul.
+
+## Usage
+
+1. Start the application with Maven
+2. The API will be accessible at http://localhost:8080
+
+
+## API Endpoints
+The API provides the following endpoints:
+
+**POST USERS**
+```markdown
+POST /users - Register a new user into the App
+```
+```json
+[
+    {
+      "firstName": "Kethlyn",
+      "lastName": "Diniz",
+      "password": "senha",
+      "document": "123456783",
+      "email": "kethlyn@example.com",
+      "userType": "COMMON",
+      "balance": 10
+    },
+    {
+      "firstName": "Joao",
+      "lastName": "Silva",
+      "password": "senha",
+      "document": "123654789",
+      "email": "joao@example.com",
+      "userType": "MERCHANT",
+      "balance": 10
+    }
+]
+```
+
+**GET USERS**
+```markdown
+GET /users - Retrieve a list of all users.
+```
+```json
+[
+    {
+        "id": 1,
+        "firstName": "Kethlyn",
+        "lastName": "Diniz",
+        "document": "123456787",
+        "email": "kethlyn@example.com",
+        "password": "senha",
+        "balance": 10.00,
+        "userType": "COMMON"
+    },
+    {
+        "id": 2,
+        "firstName": "Joao",
+        "lastName": "Silva",
+        "document": "123456787",
+        "email": "joao@example.com",
+        "password": "senha",
+        "balance": 10.00,
+        "userType": "MERCHANT"
+    }
+]
+```
+
+**POST TRANSACTIONS**
+```markdown
+POST /transactions - Register a new Transaction between users (COMMON to COMMON or COMMON to MERCHANT)
+```
+
+```json
+
+{
+  "senderId": 1,
+  "receiverId": 2,
+  "value": 10
+}
+```
+
+## Database
+The project utilizes [H2 Database](https://www.h2database.com/html/tutorial.html) as the database. 
